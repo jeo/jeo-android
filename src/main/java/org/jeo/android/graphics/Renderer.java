@@ -181,7 +181,11 @@ public class Renderer {
                     "Layer "+data.getName()+" specifies no projection, assuming map projection");
             }
 
-            q.bounds(bbox);
+            // only activate bbox if requested area is less than 90% of data
+            // to reduce the chance of the worse performance case
+            if ( (bbox.getArea() / data.bounds().getArea()) < .9) {
+                q.bounds(bbox);
+            }
             if (filter != null) {
                 q.filter(filter);
             }
@@ -308,7 +312,8 @@ public class Renderer {
             return;
         }
 
-        g = clipGeometry(g);
+        // until geometry clipping is more efficient, disable
+        // g = clipGeometry(g);
         if (g.isEmpty()) {
             return;
         }
