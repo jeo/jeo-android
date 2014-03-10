@@ -45,7 +45,7 @@
     <dependency>
       <groupId>org.geogit</groupId>
       <artifactId>geogit-sqlite-android</artifactId>
-      <version>0.8-SNAPSHOT</version>
+      <version>${geogit.version}</version>
     </dependency>
     <dependency>
       <groupId>org.jeo</groupId>
@@ -69,5 +69,6 @@
   <properties>
     <android.version>4.1.1.4</android.version>
     <googleplay.version>r7</googleplay.version>
+    <geogit.version>0.8-android-m1</geogit.version>
   </properties>
 </project>
