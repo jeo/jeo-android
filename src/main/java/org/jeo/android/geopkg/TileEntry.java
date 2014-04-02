@@ -14,7 +14,7 @@
  */
 package org.jeo.android.geopkg;
 
-import org.jeo.data.TilePyramid;
+import org.jeo.tile.TilePyramid;
 
 public class TileEntry extends Entry {
 

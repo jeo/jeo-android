@@ -45,7 +45,7 @@ import static org.jeo.map.CartoCSS.TEXT_HALO_FILL;
 import static org.jeo.map.CartoCSS.TEXT_HALO_RADIUS;
 import static org.jeo.map.CartoCSS.TEXT_SIZE;
 
-import org.jeo.data.Tile;
+import org.jeo.tile.Tile;
 import org.jeo.feature.Feature;
 import org.jeo.geom.CoordinatePath;
 import org.jeo.map.RGB;

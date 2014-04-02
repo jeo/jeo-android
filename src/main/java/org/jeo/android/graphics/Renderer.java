@@ -34,10 +34,10 @@ import java.io.IOException;
 
 import org.jeo.data.Dataset;
 import org.jeo.data.Query;
-import org.jeo.data.Tile;
-import org.jeo.data.TileCover;
+import org.jeo.tile.Tile;
+import org.jeo.tile.TileCover;
 import org.jeo.data.TileDataset;
-import org.jeo.data.TilePyramid;
+import org.jeo.tile.TilePyramid;
 import org.jeo.data.VectorDataset;
 import org.jeo.feature.Feature;
 import org.jeo.filter.Filter;

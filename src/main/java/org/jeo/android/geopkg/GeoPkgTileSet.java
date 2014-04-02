@@ -17,9 +17,9 @@ package org.jeo.android.geopkg;
 import java.io.IOException;
 
 import org.jeo.data.Cursor;
-import org.jeo.data.Tile;
 import org.jeo.data.TileDataset;
-import org.jeo.data.TilePyramid;
+import org.jeo.tile.Tile;
+import org.jeo.tile.TilePyramid;
 
 public class GeoPkgTileSet extends GeoPkgDataset<TileEntry> implements TileDataset {
 
