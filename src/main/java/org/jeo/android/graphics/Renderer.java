@@ -278,7 +278,7 @@ public class Renderer {
     void renderBackground() {
         tx.reset(canvas);
         try {
-            RuleList rules = map.getStyle().getRules().selectByName("Map", false);
+            RuleList rules = map.getStyle().getRules().selectByName("Map", false, false);
             if (rules.isEmpty()) {
                 //nothing to do
                 return;
