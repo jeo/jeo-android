@@ -33,8 +33,6 @@ import org.jeo.data.Driver;
 import org.jeo.data.FileData;
 import org.jeo.data.Query;
 import org.jeo.data.QueryPlan;
-import org.jeo.tile.TilePyramid;
-import org.jeo.tile.TilePyramidBuilder;
 import org.jeo.data.Workspace;
 import org.jeo.feature.Feature;
 import org.jeo.feature.Field;
@@ -44,6 +42,8 @@ import org.jeo.geom.Envelopes;
 import org.jeo.geom.Geom;
 import org.jeo.proj.Proj;
 import org.jeo.sql.SQL;
+import org.jeo.tile.TilePyramid;
+import org.jeo.tile.TilePyramidBuilder;
 import org.jeo.util.Key;
 import org.osgeo.proj4j.CoordinateReferenceSystem;
 
