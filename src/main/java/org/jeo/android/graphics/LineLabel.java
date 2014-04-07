@@ -22,6 +22,7 @@ import org.jeo.map.Rule;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineSegment;
+import org.jeo.map.render.Label;
 
 /**
  * Label for lines or labels anchored to a line.

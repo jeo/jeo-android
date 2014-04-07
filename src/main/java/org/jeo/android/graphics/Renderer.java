@@ -14,56 +14,26 @@
  */
 package org.jeo.android.graphics;
 
-import static org.jeo.android.graphics.Graphics.bitmap;
-import static org.jeo.android.graphics.Graphics.color;
-import static org.jeo.android.graphics.Graphics.labelPaint;
-import static org.jeo.android.graphics.Graphics.linePaint;
-import static org.jeo.android.graphics.Graphics.markFillPaint;
-import static org.jeo.android.graphics.Graphics.markLinePaint;
-import static org.jeo.android.graphics.Graphics.paint;
-import static org.jeo.android.graphics.Graphics.polyFillPaint;
-import static org.jeo.android.graphics.Graphics.polyLinePaint;
-import static org.jeo.android.graphics.Graphics.rectFromCenter;
-import static org.jeo.map.CartoCSS.BACKGROUND_COLOR;
-import static org.jeo.map.CartoCSS.MARKER_HEIGHT;
-import static org.jeo.map.CartoCSS.MARKER_WIDTH;
-import static org.jeo.map.CartoCSS.OPACITY;
-import static org.jeo.map.CartoCSS.TEXT_NAME;
-
-import java.io.IOException;
-
-import org.jeo.data.Dataset;
-import org.jeo.data.Query;
-import org.jeo.data.TileDataset;
-import org.jeo.tile.Tile;
-import org.jeo.tile.TileCover;
-import org.jeo.tile.TilePyramid;
-import org.jeo.data.VectorDataset;
-import org.jeo.feature.Feature;
-import org.jeo.filter.Filter;
-import org.jeo.geom.CoordinatePath;
-import org.jeo.geom.Envelopes;
-import org.jeo.geom.Geom;
-import org.jeo.map.Layer;
-import org.jeo.map.Map;
-import org.jeo.map.RGB;
-import org.jeo.map.Rule;
-import org.jeo.map.RuleList;
-import org.jeo.map.View;
-import org.jeo.proj.Proj;
-import org.osgeo.proj4j.CoordinateReferenceSystem;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.Rect;
-
+import android.graphics.*;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
+import org.jeo.data.TileDataset;
+import org.jeo.feature.Feature;
+import org.jeo.geom.CoordinatePath;
+import org.jeo.map.*;
+import org.jeo.map.render.BaseRenderer;
+import org.jeo.map.render.Label;
+import org.jeo.tile.Tile;
+import org.jeo.tile.TileCover;
+import org.jeo.tile.TilePyramid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+
+import static org.jeo.android.graphics.Graphics.*;
+import static org.jeo.map.CartoCSS.*;
 
 /**
  * Renders a map to an Android {@link Canvas}.
@@ -81,25 +51,15 @@ import com.vividsolutions.jts.geom.Geometry;
  * </p>
  * @author Justin Deoliveira, OpenGeo
  */
-public class Renderer {
+public class Renderer extends BaseRenderer {
 
     static Logger LOG = LoggerFactory.getLogger(Renderer.class);
-
-    /** the view/map being rendered */
-    View view;
-    Map map;
 
     /** the transformation pipeline */
     TransformPipeline tx;
 
     /** canvas to draw to */
     Canvas canvas;
-
-    /** label index */
-    LabelIndex labels;
-
-    /** label renderer */
-    Labeller labeller;
 
     public Renderer(Canvas canvas) {
         this.canvas = canvas;
@@ -109,104 +69,22 @@ public class Renderer {
         return tx;
     }
 
-    public LabelIndex getLabels() {
-        return labels;
-    }
-
-    public void init(View view) {
-        this.view = view;
-        
-        map = view.getMap();
+    @Override
+    public void init(View view, java.util.Map<?, Object> opts) {
+        super.init(view, opts);
 
         // initialize the transformation from world to screen
         tx = new TransformPipeline(view);
         tx.apply(canvas);
 
-        // labels
-        labels = new LabelIndex();
-        labeller = new Labeller(canvas, tx);
     }
 
-    public void render() {
-        LOG.debug("Rendering map at " + view.getBounds());
-
-        // background
-        renderBackground();
-        for (Layer l : map.getLayers()) {
-            if (!l.isVisible()) {
-                continue;
-            }
-
-            Dataset data = l.getData();
-            Filter filter = l.getFilter();
-
-            RuleList rules =
-                map.getStyle().getRules().selectById(l.getName(), true).flatten();
-            
-            if (data instanceof VectorDataset) {
-                for (RuleList ruleList : rules.zgroup()) {
-                    render((VectorDataset)data, ruleList, filter);
-                }
-            }
-            else {
-                render((TileDataset)data, rules);
-            }
-
-        }
-
-        //labels
-        renderLabels();
-        tx.reset(canvas);
-        LOG.debug("Rendering complete");
+    @Override
+    protected org.jeo.map.render.Labeller createLabeller() {
+        return new Labeller(canvas, tx);
     }
 
-    void render(VectorDataset data, RuleList rules, Filter filter) {
-        try {
-            // build up the data query
-            Query q = new Query();
-
-            // bounds, we may have to reproject it
-            Envelope bbox = view.getBounds();
-            CoordinateReferenceSystem crs = data.crs();
-            
-            // reproject
-            if (crs != null) {
-                if (view.getCRS() != null && !Proj.equal(view.getCRS(), data.crs())) {
-                    q.reproject(view.getCRS());
-                    bbox = Proj.reproject(bbox, view.getCRS(), crs);
-                }
-            }
-            else {
-                LOG.debug(
-                    "Layer "+data.getName()+" specifies no projection, assuming map projection");
-            }
-
-            // only activate bbox if requested area is less than 90% of data
-            // to reduce the chance of the worse performance case
-            if ( (bbox.getArea() / data.bounds().getArea()) < .9) {
-                q.bounds(bbox);
-            }
-            if (filter != null) {
-                q.filter(filter);
-            }
-
-            for (Feature f : data.cursor(q)) {
-                RuleList rs = rules.match(f);
-                if (rs.isEmpty()) {
-                    continue;
-                }
-              
-                Rule r = rules.match(f).collapse();
-                if (r != null) {
-                    draw(f, r);
-                }
-            }
-        } catch (IOException e) {
-            LOG.error("Error querying layer " + data.getName(), e);
-        }
-    }
-
-    void render(TileDataset data, RuleList rules) {
+    protected void render(TileDataset data, RuleList rules) {
         tx.reset(canvas);
 
         Rule rule = rules.collapse();
@@ -232,7 +110,7 @@ public class Renderer {
                     Tile t = cov.tile(x, y);
 
                     // clip source rectangle
-                    Rect src = clipTile(t, pyr, map);
+                    Rect src = clipTile(t, pyr);
 
                     dst.right = dst.left + (int) (src.width() * scx);
                     dst.top = dst.bottom - (int) (src.height() * scy);
@@ -258,7 +136,7 @@ public class Renderer {
         tx.apply(canvas);
     }
 
-    Rect clipTile(Tile t, TilePyramid pyr, Map map) {
+    Rect clipTile(Tile t, TilePyramid pyr) {
         Envelope tb = pyr.bounds(t);
         Envelope i = tb.intersection(view.getBounds());
 
@@ -275,25 +153,14 @@ public class Renderer {
         return rect;
     }
 
-    void renderBackground() {
+    @Override
+    protected void drawBackground(RGB color) throws IOException {
         tx.reset(canvas);
         try {
-            RuleList rules = map.getStyle().getRules().selectByName("Map", false, false);
-            if (rules.isEmpty()) {
-                //nothing to do
-                return;
-            }
-    
-            Rule rule = rules.collapse();
-            RGB bgColor = rule.color(map, BACKGROUND_COLOR, null);
-            if (bgColor != null) {
-                bgColor = bgColor.alpha(rule.number(map, OPACITY, 1f));
-    
-                Paint p = paint(map, rule);
-                p.setStyle(Paint.Style.FILL);
-                p.setColor(color(bgColor));
-                canvas.drawRect(new Rect(0, 0, view.getWidth(), view.getHeight()), p);
-            }
+            Paint p = paint(null, null);
+            p.setStyle(Paint.Style.FILL);
+            p.setColor(color(color));
+            canvas.drawRect(new Rect(0, 0, view.getWidth(), view.getHeight()), p);
         }
         finally {
             tx.apply(canvas);
@@ -306,43 +173,8 @@ public class Renderer {
         }
     }
 
-    void draw(Feature f, Rule rule) {
-        Geometry g = f.geometry();
-        if (g == null) {
-            return;
-        }
-
-        // until geometry clipping is more efficient, disable
-        // g = clipGeometry(g);
-        if (g.isEmpty()) {
-            return;
-        }
-
-        switch(Geom.Type.from(g)) {
-        case POINT:
-        case MULTIPOINT:
-            drawPoint(f, rule);
-            return;
-        case LINESTRING:
-        case MULTILINESTRING:
-            drawLine(f, rule, g);
-            return;
-        case POLYGON:
-        case MULTIPOLYGON:
-            drawPolygon(f, rule, g);
-            return;
-        default:
-            throw new UnsupportedOperationException();
-        }
-    }
-
-    Geometry clipGeometry(Geometry g) {
-        // TODO: doing a full intersection is sub-optimal, look at a more efficient clipping 
-        // algorithm, like cohen-sutherland
-        return g.intersection(Envelopes.toPolygon(view.getBounds()));
-    }
-
-    void drawPoint(Feature f, Rule rule) {
+    @Override
+    protected void drawPoint(Feature f, Rule rule, Geometry point) {
         // markers drawn in pixel space
         tx.reset(canvas);
 
@@ -352,8 +184,6 @@ public class Renderer {
         Paint fillPaint = markFillPaint(f, rule);
         Paint linePaint = markLinePaint(f, rule);
         
-        Geometry point = f.geometry();
-
         if (fillPaint != null) {
             CoordinatePath path = 
                 CoordinatePath.create(point).generalize(view.iscaleX(),view.iscaleY());
@@ -384,7 +214,7 @@ public class Renderer {
     }
 
     void createPointLabel(String label, Rule rule, Feature f, Geometry g) {
-        PointLabel l = new PointLabel(label, rule, f, g);
+        Label l = new Label(label, rule, f, g);
 
         Paint p = labelPaint(f, rule);
         l.put(Paint.class, p);
@@ -392,7 +222,7 @@ public class Renderer {
         labeller.layout(l, labels);
     }
 
-    void drawLine(Feature f, Rule rule, Geometry line) {
+    protected void drawLine(Feature f, Rule rule, Geometry line) {
         Path path = path(line);
         canvas.drawPath(path, linePaint(f, rule, tx.canvasToWorld));
 
@@ -412,7 +242,7 @@ public class Renderer {
         labeller.layout(l, labels);
     }
 
-    void drawPolygon(Feature f, Rule rule, Geometry poly) {
+    protected void drawPolygon(Feature f, Rule rule, Geometry poly) {
 
         Paint fill = polyFillPaint(f, rule);
         Paint line = polyLinePaint(f, rule, tx.canvasToWorld);
@@ -441,5 +271,9 @@ public class Renderer {
         CoordinatePath cpath = 
             CoordinatePath.create(g).generalize(view.iscaleX(),view.iscaleY());
         return Graphics.path(cpath);
+    }
+
+    @Override
+    public void close() {
     }
 }

@@ -84,7 +84,7 @@ public class Graphics {
 
     public static Paint paint(Object obj, Rule rule) {
         Paint p = new Paint();
-        if (rule.bool(obj, "anti-alias", true)) {
+        if (rule != null && rule.bool(obj, "anti-alias", true)) {
             p.setAntiAlias(true);
         }
         return p;

@@ -47,8 +47,10 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineSegment;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.MultiLineString;
+import org.jeo.map.render.Label;
+import org.jeo.map.render.LabelIndex;
 
-public class Labeller {
+public class Labeller implements org.jeo.map.render.Labeller {
 
     static final double DEFAULT_MAX_ANGLE_CHAR_DELTA = 22.5 * Math.PI/180.0;
     static final double HALFPI = Math.PI/2.0;
@@ -62,71 +64,65 @@ public class Labeller {
     }
 
     public boolean layout(Label label, LabelIndex labels) {
-        if (label instanceof PointLabel) {
-            return layout((PointLabel)label, labels);
-        }
-        else if (label instanceof LineLabel) {
+        if (label instanceof LineLabel) {
             return layout((LineLabel)label, labels);
         }
-        
-        return false;
-    }
+        else {
+            String text = label.getText();
+            Feature f = label.getFeature();
+            Geometry g = label.getGeometry();
 
-    boolean layout(PointLabel label, LabelIndex labels) {
-        String text = label.getText();
-        Feature f = label.getFeature();
-        Geometry g = label.getGeometry();
+            Rule rule = label.getRule();
 
-        Rule rule = label.getRule();
+            // get center in screen space
+            Coordinate centroid = g.getCentroid().getCoordinate();
 
-        // get center in screen space
-        Coordinate centroid = g.getCentroid().getCoordinate();
+            PointF anchor = tx.getWorldToCanvas().map(centroid);
 
-        PointF anchor = tx.getWorldToCanvas().map(centroid);
-        
-        // apply offsets
-        anchor.x += rule.number(f, TEXT_DX, 0f);
-        anchor.y += rule.number(f, TEXT_DY, 0f);
+            // apply offsets
+            anchor.x += rule.number(f, TEXT_DX, 0f);
+            anchor.y += rule.number(f, TEXT_DY, 0f);
 
-        Paint p = label.get(Paint.class, Paint.class);
+            Paint p = label.get(Paint.class, Paint.class);
 
-        //compute bounds of this label
-        Rect b = new Rect();
-        p.getTextBounds(text, 0, text.length(), b);
+            //compute bounds of this label
+            Rect b = new Rect();
+            p.getTextBounds(text, 0, text.length(), b);
 
-        //padding
-        float padding = rule.number(f, TEXT_MIN_PADDING, 0f);
-        if (padding > 0f) {
-            b = expand(b, padding);
+            //padding
+            float padding = rule.number(f, TEXT_MIN_PADDING, 0f);
+            if (padding > 0f) {
+                b = expand(b, padding);
+            }
+
+            //label.setAnchor(new Coordinate(center.x,center.y));
+            //label.setBox(envelope(rectFromBottomLeft(center, b.width(), b.height())));
+
+            RectF c = new RectF(b);
+            tx.getCanvasToWorld().mapRect(c);
+
+            centroid = tx.getCanvasToWorld().map(anchor);
+            label.setAnchor(centroid);
+
+            RectF box = null;
+            switch(p.getTextAlign()) {
+                case LEFT:
+                    box = rectFromBottomLeft(point(centroid), c.width(), c.height());
+                    break;
+                case CENTER:
+                    box = rectFromBottomCenter(point(centroid), c.width(), c.height());
+                    break;
+                case RIGHT:
+                    box = rectFromBottomRight(point(centroid), c.width(), c.height());
+                    break;
+            }
+            label.setBounds(envelope(box));
+
+            return labels.insert(label);
         }
 
-        //label.setAnchor(new Coordinate(center.x,center.y));
-        //label.setBox(envelope(rectFromBottomLeft(center, b.width(), b.height())));
-
-        RectF c = new RectF(b);
-        tx.getCanvasToWorld().mapRect(c);
-
-        centroid = tx.getCanvasToWorld().map(anchor);
-        label.setAnchor(centroid);
-
-        RectF box = null;
-        switch(p.getTextAlign()) {
-        case LEFT:
-            box = rectFromBottomLeft(point(centroid), c.width(), c.height());
-            break;
-        case CENTER:
-            box = rectFromBottomCenter(point(centroid), c.width(), c.height());
-            break;
-        case RIGHT:
-            box = rectFromBottomRight(point(centroid), c.width(), c.height());
-            break;
-        }
-
-        label.setBox(envelope(box));
-
-        return labels.insert(label);
     }
-   
+
     boolean layout(LineLabel label, LabelIndex labels) {
         String txt = label.getText();
         Rule rule = label.getRule();
@@ -230,7 +226,6 @@ public class Labeller {
         label.setShape(toShape(path, bounds.height()));
         return labels.insert(label);
     }
-
 
     Geometry toShape(List<LineSegment> path, double h) {
         //TODO: take into account letter alignment
@@ -377,58 +372,46 @@ public class Labeller {
     }
 
     public void render(Label label) {
-        if (label instanceof PointLabel) {
-            render((PointLabel)label);
-        }
-        else if (label instanceof LineLabel) {
-            render((LineLabel)label);
-        }
-    }
-    
-    void render(PointLabel label) {
         tx.reset(canvas);
 
-        Paint p = label.get(Paint.class, Paint.class);
+        if (label instanceof LineLabel) {
+            String txt = label.getText();
 
-        Coordinate a = label.getAnchor();
-        PointF f = tx.getWorldToCanvas().map(a);
+            Paint p = label.get(Paint.class, Paint.class);
 
-        canvas.drawText(label.getText(), f.x, f.y, p);
+            List<LineSegment> path = ((LineLabel)label).getPath();
+            for (int i = 0; i < txt.length(); i++) {
+                LineSegment line = path.get(i);
 
-        tx.apply(canvas);
-    }
+                PointF p0 = tx.getWorldToCanvas().map(line.p0);
+                PointF p1 = tx.getWorldToCanvas().map(line.p1);
 
-    void render(LineLabel label) {
-        tx.reset(canvas);
-        
-        String txt = label.getText();
+                double theta = Math.atan((p1.y - p0.y) / (p1.x - p0.x));
 
-        Paint p = label.get(Paint.class, Paint.class);
+                Matrix m = canvas.getMatrix();
+                Matrix n = new Matrix(canvas.getMatrix());
+                n.preRotate((float)Math.toDegrees(theta), p0.x, p0.y);
 
-        List<LineSegment> path = label.getPath();
-        for (int i = 0; i < txt.length(); i++) {
-            LineSegment line = path.get(i);
-            
-            PointF p0 = tx.getWorldToCanvas().map(line.p0);
-            PointF p1 = tx.getWorldToCanvas().map(line.p1);
+                //Paint debug = new Paint();
+                //debug.setColor(Color.RED);
+                //canvas.drawLine(p0.x, p0.y, p1.x, p1.y, debug);
 
-            double theta = Math.atan((p1.y - p0.y) / (p1.x - p0.x));
-            
-            Matrix m = canvas.getMatrix();
-            Matrix n = new Matrix(canvas.getMatrix());
-            n.preRotate((float)Math.toDegrees(theta), p0.x, p0.y);
+                canvas.setMatrix(n);
+                canvas.drawText(txt, i, i+1, p0.x, p0.y, p);
+                canvas.setMatrix(m);
+            }
 
-            //Paint debug = new Paint();
-            //debug.setColor(Color.RED);
-            //canvas.drawLine(p0.x, p0.y, p1.x, p1.y, debug);
-
-            canvas.setMatrix(n);
-            canvas.drawText(txt, i, i+1, p0.x, p0.y, p);
-            canvas.setMatrix(m);
+            //canvas.drawTextOnPath(l.text, l.getPath(), 0, 0, l.get(Paint.class,Paint.class));
         }
+        else {
+            Paint p = label.get(Paint.class, Paint.class);
 
+            Coordinate a = label.anchor();
+            PointF f = tx.getWorldToCanvas().map(a);
+
+            canvas.drawText(label.getText(), f.x, f.y, p);
+        }
         tx.apply(canvas);
-        //canvas.drawTextOnPath(l.text, l.getPath(), 0, 0, l.get(Paint.class,Paint.class));
     }
 
     double angle(LineSegment l) {
