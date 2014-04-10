@@ -71,12 +71,11 @@ public class Renderer extends BaseRenderer {
 
     @Override
     public void init(View view, java.util.Map<?, Object> opts) {
-        super.init(view, opts);
-
         // initialize the transformation from world to screen
         tx = new TransformPipeline(view);
         tx.apply(canvas);
 
+        super.init(view, opts);
     }
 
     @Override
