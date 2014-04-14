@@ -40,7 +40,7 @@ public class Android2D implements RendererFactory<AndroidRenderer> {
 
     @Override
     public List<String> getFormats() {
-        return Arrays.asList("png");
+        return Arrays.asList("png", "image/png");
     }
 
     @Override
