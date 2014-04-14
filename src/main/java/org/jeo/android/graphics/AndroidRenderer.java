@@ -43,7 +43,7 @@ import static org.jeo.map.CartoCSS.*;
  * Canvas canvas = ...;
  * Map map = ...;
  *
- * Renderer r = new Renderer(canvas);
+ * AndroidRenderer r = new AndroidRenderer(canvas);
  * r.init(map);
  * r.render();
  * 
@@ -51,9 +51,9 @@ import static org.jeo.map.CartoCSS.*;
  * </p>
  * @author Justin Deoliveira, OpenGeo
  */
-public class Renderer extends BaseRenderer {
+public class AndroidRenderer extends BaseRenderer {
 
-    static Logger LOG = LoggerFactory.getLogger(Renderer.class);
+    static Logger LOG = LoggerFactory.getLogger(AndroidRenderer.class);
 
     /** the transformation pipeline */
     TransformPipeline tx;
@@ -61,8 +61,16 @@ public class Renderer extends BaseRenderer {
     /** canvas to draw to */
     Canvas canvas;
 
-    public Renderer(Canvas canvas) {
+    /** underlying bitmap */
+    Bitmap bitmap;
+
+    public AndroidRenderer(Canvas canvas) {
+        this(canvas, null);
+    }
+
+    public AndroidRenderer(Canvas canvas, Bitmap bitmap) {
         this.canvas = canvas;
+        this.bitmap = bitmap;
     }
 
     public TransformPipeline getTransform() {
@@ -273,6 +281,16 @@ public class Renderer extends BaseRenderer {
     }
 
     @Override
+    protected void onFinish() throws IOException {
+        if (bitmap != null) {
+            bitmap.compress(Bitmap.CompressFormat.PNG, 90, output);
+        }
+    }
+
+    @Override
     public void close() {
+        if (bitmap != null) {
+            bitmap.recycle();
+        }
     }
 }
