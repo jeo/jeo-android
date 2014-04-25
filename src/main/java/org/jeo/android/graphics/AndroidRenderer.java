@@ -15,6 +15,7 @@
 package org.jeo.android.graphics;
 
 import android.graphics.*;
+import android.graphics.Rect;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
@@ -27,10 +28,12 @@ import org.jeo.map.render.Label;
 import org.jeo.tile.Tile;
 import org.jeo.tile.TileCover;
 import org.jeo.tile.TilePyramid;
+import org.jeo.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 import static org.jeo.android.graphics.Graphics.*;
 import static org.jeo.map.CartoCSS.*;
@@ -76,6 +79,22 @@ public class AndroidRenderer extends BaseRenderer {
     public TransformPipeline getTransform() {
         return tx;
     }
+
+    @Override
+    protected boolean canRenderVectors() {
+        return true;
+    }
+
+    @Override
+    protected boolean canRenderRasters() {
+        return false;
+    }
+
+    @Override
+    protected boolean canRenderTiles() {
+        return true;
+    }
+
 
     @Override
     public void init(View view, java.util.Map<?, Object> opts) {
