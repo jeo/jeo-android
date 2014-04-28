@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
 import static org.jeo.android.graphics.Graphics.*;
@@ -87,7 +88,7 @@ public class AndroidRenderer extends BaseRenderer {
 
     @Override
     protected boolean canRenderRasters() {
-        return false;
+        return true;
     }
 
     @Override
@@ -297,6 +298,36 @@ public class AndroidRenderer extends BaseRenderer {
         CoordinatePath cpath = 
             CoordinatePath.create(g).generalize(view.iscaleX(),view.iscaleY());
         return Graphics.path(cpath);
+    }
+
+    @Override
+    protected void drawRasterRGBA(ByteBuffer raster, org.jeo.util.Rect pos, Rule rule) throws IOException {
+        tx.reset(canvas);
+        try {
+            Bitmap bitmap = Bitmap.createBitmap(pos.width(), pos.height(), Bitmap.Config.ARGB_8888);
+            bitmap.copyPixelsFromBuffer(raster);
+            canvas.drawBitmap(bitmap, new Rect(0, 0, pos.width(), pos.height()), rect(pos), paint(null, rule));
+        }
+        finally {
+            tx.apply(canvas);
+        }
+    }
+
+    @Override
+    protected void drawRasterGray(ByteBuffer raster, org.jeo.util.Rect pos, Rule rule) throws IOException {
+        tx.reset(canvas);
+        try {
+            Bitmap bitmap = Bitmap.createBitmap(pos.width(), pos.height(), Bitmap.Config.ALPHA_8);
+            bitmap.copyPixelsFromBuffer(raster);
+            canvas.drawBitmap(bitmap, new Rect(0,0,pos.width(),pos.height()), rect(pos), paint(null, rule));
+        }
+        finally {
+            tx.apply(canvas);
+        }
+    }
+
+    Rect rect(org.jeo.util.Rect r) {
+        return new Rect(r.left, r.top, r.right, r.bottom);
     }
 
     @Override
