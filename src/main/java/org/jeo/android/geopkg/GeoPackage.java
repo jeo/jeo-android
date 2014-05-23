@@ -17,6 +17,7 @@ package org.jeo.android.geopkg;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 
@@ -63,5 +64,12 @@ public class GeoPackage extends FileVectorDriver<GeoPkgWorkspace> {
         GeoPkgWorkspace ws = open(file, opts);
         ws.create(schema);
         return ws;
+    }
+
+    static final EnumSet<Capability> CAPABILITIES = EnumSet.of(Capability.FILTER, Capability.LIMIT, Capability.OFFSET);
+
+    @Override
+    public boolean supports(VectorDriver.Capability cap) {
+        return CAPABILITIES.contains(cap);
     }
 }
