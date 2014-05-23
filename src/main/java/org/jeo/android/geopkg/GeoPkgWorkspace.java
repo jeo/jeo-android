@@ -55,6 +55,7 @@ import android.util.Log;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import java.util.Date;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.jeo.data.Handle;
@@ -320,7 +321,10 @@ public class GeoPkgWorkspace implements Workspace, FileData {
         SQL sql = new SQL("SELECT count(*) FROM ").name(entry.getTableName());
 
         QueryPlan qp = new QueryPlan(q);
-        encodeQuery(sql, q, qp, createPrimaryKey(entry));
+        // if filter refers to properties not in the schema, defer to CQL filter
+        if (!missingProperties(entry, q)) {
+            encodeQuery(sql, q, qp, createPrimaryKey(entry));
+        }
 
         if (q.isFiltered() && !qp.isFiltered()) {
             return Cursors.size(cursor(entry, q));
@@ -345,7 +349,10 @@ public class GeoPkgWorkspace implements Workspace, FileData {
         SQL sql = new SQL("SELECT * FROM ").name(entry.getTableName());
 
         QueryPlan qp = new QueryPlan(q);
-        encodeQuery(sql, q, qp, primaryKey(entry));
+        // if filter refers to properties not in the schema, defer to CQL filter
+        if (!missingProperties(entry, q)) {
+            encodeQuery(sql, q, qp, primaryKey(entry));
+        }
 
         org.jeo.data.Cursor.Mode mode = q.getMode() == Mode.UPDATE ?
                 org.jeo.data.Cursor.UPDATE :
@@ -623,6 +630,18 @@ public class GeoPkgWorkspace implements Workspace, FileData {
     //
     // common utility methods
     //
+
+    boolean missingProperties(FeatureEntry entry, Query q) throws IOException {
+        boolean hasMissing = false;
+        if (q.getFilter() != null) {
+            Set<String> properties = Filters.properties(q.getFilter());
+            // try to defer resolving the schema unless needed
+            if (!properties.isEmpty()) {
+                hasMissing = !q.missingProperties(schema(entry)).isEmpty();
+            }
+        }
+        return hasMissing;
+    }
 
     void initEntry(Entry e, Cursor c) {
         e.setTableName(c.getString(0));
