@@ -16,13 +16,13 @@ package org.jeo.android.graphics;
 
 import java.util.List;
 
-import org.jeo.feature.Feature;
+import org.jeo.vector.Feature;
 import org.jeo.map.Rule;
 
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineSegment;
-import org.jeo.map.render.Label;
+import org.jeo.render.Label;
 
 /**
  * Label for lines or labels anchored to a line.

@@ -46,7 +46,7 @@ import static org.jeo.map.CartoCSS.TEXT_HALO_RADIUS;
 import static org.jeo.map.CartoCSS.TEXT_SIZE;
 
 import org.jeo.tile.Tile;
-import org.jeo.feature.Feature;
+import org.jeo.vector.Feature;
 import org.jeo.geom.CoordinatePath;
 import org.jeo.map.RGB;
 import org.jeo.map.Rule;
@@ -354,7 +354,7 @@ public class Graphics {
             float x = (float) c.x;
             float y = (float) c.y;
 
-            switch(path.getStep()) {
+            switch(path.step()) {
             case MOVE_TO:
                 p.moveTo(x, y);
                 break;
@@ -448,7 +448,7 @@ public class Graphics {
     }
 
     public static Bitmap bitmap(Tile t) {
-        byte[] data = t.getData();
+        byte[] data = t.data();
         if (data == null) {
             return Bitmap.createBitmap(256, 256, Bitmap.Config.ARGB_8888);
         }

@@ -19,12 +19,12 @@ import android.graphics.Rect;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
-import org.jeo.data.TileDataset;
-import org.jeo.feature.Feature;
+import org.jeo.tile.TileDataset;
+import org.jeo.vector.Feature;
 import org.jeo.geom.CoordinatePath;
 import org.jeo.map.*;
-import org.jeo.map.render.BaseRenderer;
-import org.jeo.map.render.Label;
+import org.jeo.render.BaseRenderer;
+import org.jeo.render.Label;
 import org.jeo.tile.Tile;
 import org.jeo.tile.TileCover;
 import org.jeo.tile.TilePyramid;
@@ -107,7 +107,7 @@ public class AndroidRenderer extends BaseRenderer {
     }
 
     @Override
-    protected org.jeo.map.render.Labeller createLabeller() {
+    protected org.jeo.render.Labeller createLabeller() {
         return new Labeller(canvas, tx);
     }
 
@@ -126,14 +126,14 @@ public class AndroidRenderer extends BaseRenderer {
 
             Paint p = paint(null, rule);
 
-            double scx = cov.getGrid().getXRes() / view.iscaleX();
-            double scy = cov.getGrid().getYRes() / view.iscaleY();
+            double scx = cov.grid().xres() / view.iscaleX();
+            double scy = cov.grid().yres() / view.iscaleY();
 
             dst.left = 0;
-            for (int x = 0; x < cov.getWidth(); x++) {
+            for (int x = 0; x < cov.width(); x++) {
                 dst.bottom = canvas.getHeight();
 
-                for (int y = 0; y < cov.getHeight(); y++) {
+                for (int y = 0; y < cov.height(); y++) {
                     Tile t = cov.tile(x, y);
 
                     // clip source rectangle
@@ -154,7 +154,7 @@ public class AndroidRenderer extends BaseRenderer {
             }
         }
         catch(IOException e) {
-            LOG.error("Error querying layer " + data.getName(), e);
+            LOG.error("Error querying layer " + data.name(), e);
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -167,7 +167,7 @@ public class AndroidRenderer extends BaseRenderer {
         Envelope tb = pyr.bounds(t);
         Envelope i = tb.intersection(view.getBounds());
 
-        Rect rect = new Rect(0, 0, pyr.getTileWidth(), pyr.getTileHeight());
+        Rect rect = new Rect(0, 0, pyr.tileWidth(), pyr.tileHeight());
 
         int w = rect.width();
         int h = rect.height();

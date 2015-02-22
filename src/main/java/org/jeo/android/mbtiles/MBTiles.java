@@ -34,17 +34,17 @@ public class MBTiles extends FileDriver<MBTileSet> {
     }
 
     @Override
-    public String getName() {
+    public String name() {
         return "MBTiles";
     }
 
     @Override
-    public List<String> getAliases() {
+    public List<String> aliases() {
         return Arrays.asList("mbt");
     }
 
     @Override
-    public Class<MBTileSet> getType() {
+    public Class<MBTileSet> type() {
         return MBTileSet.class;
     }
 

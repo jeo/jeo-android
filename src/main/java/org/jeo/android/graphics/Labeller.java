@@ -30,7 +30,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.jeo.feature.Feature;
+import org.jeo.vector.Feature;
 import org.jeo.geom.GeomBuilder;
 import org.jeo.map.Rule;
 
@@ -47,10 +47,10 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineSegment;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.MultiLineString;
-import org.jeo.map.render.Label;
-import org.jeo.map.render.LabelIndex;
+import org.jeo.render.Label;
+import org.jeo.render.LabelIndex;
 
-public class Labeller implements org.jeo.map.render.Labeller {
+public class Labeller implements org.jeo.render.Labeller {
 
     static final double DEFAULT_MAX_ANGLE_CHAR_DELTA = 22.5 * Math.PI/180.0;
     static final double HALFPI = Math.PI/2.0;

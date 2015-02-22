@@ -17,7 +17,7 @@ package org.jeo.android.graphics;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import org.jeo.map.View;
-import org.jeo.map.render.RendererFactory;
+import org.jeo.render.RendererFactory;
 
 import java.util.Arrays;
 import java.util.List;

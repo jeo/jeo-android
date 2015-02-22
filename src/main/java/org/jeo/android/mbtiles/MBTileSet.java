@@ -25,7 +25,7 @@ import org.jeo.data.Cursor;
 import org.jeo.data.Driver;
 import org.jeo.data.FileData;
 import org.jeo.tile.Tile;
-import org.jeo.data.TileDataset;
+import org.jeo.tile.TileDataset;
 import org.jeo.tile.TilePyramid;
 import org.jeo.tile.TilePyramidBuilder;
 import org.jeo.geom.Envelopes;
@@ -79,27 +79,27 @@ public class MBTileSet implements TileDataset, FileData {
     }
 
     @Override
-    public File getFile() {
+    public File file() {
         return file;
     }
 
     @Override
-    public Driver<?> getDriver() {
+    public Driver<?> driver() {
         return new MBTiles();
     }
 
     @Override
-    public Map<Key<?>, Object> getDriverOptions() {
+    public Map<Key<?>, Object> driverOptions() {
         return (Map) Collections.singletonMap(MBTiles.FILE, file);
     }
 
     @Override
-    public String getName() {
+    public String name() {
         return Util.base(file.getName());
     }
 
     @Override
-    public String getTitle() {
+    public String title() {
         android.database.Cursor c = db.query(METADATA, new String[]{"value"}, "name = ?", 
                 new String[]{"name"}, null, null, null);
         try {
@@ -115,7 +115,7 @@ public class MBTileSet implements TileDataset, FileData {
     }
 
     @Override
-    public String getDescription() {
+    public String description() {
         android.database.Cursor c = db.query(METADATA, new String[]{"value"}, "name = ?", 
                 new String[]{"description"}, null, null, null);
         try {

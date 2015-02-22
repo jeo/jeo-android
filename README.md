@@ -1,6 +1,6 @@
 # jeo-android
 
-Android specific utilities for [jeo](https://github.com/jdeolive/jeo/).
+Android specific utilities for [jeo](https://github.com/jeo/jeo/).
 
 ## Building
 
@@ -13,7 +13,7 @@ To build the android module run maven:
 The android module depends the following libraries:
 
 * `com.google.android:android:4.0.1.2` - The core Android APIs
-* `com.google.android:google-play-services:r7` - Google Play services 
+* `com.google.android:google-play-services:r22` - Google Play services 
 extensions to the Android core such as the Google Maps API
 
 These libraries are only compile time dependencies. At runtime the actual 
@@ -26,7 +26,7 @@ example:
     mvn -Dandroid.version=4.1.1.4 -Dgoogleplay.version=r10 install
 
 The google-play-services library is typically not available in any of the 
-standard maven repositories so to use a version other than r7 it must first be
+standard maven repositories so to use a version other than r22 it must first be
 installed manually in the local maven repository. The easiest way to obtain 
 the jar is through the Android SDK Manager under the "Google Play Services" 
 option from the "Extras" category. Once installed you can install it into the 

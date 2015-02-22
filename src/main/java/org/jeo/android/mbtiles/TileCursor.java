@@ -45,11 +45,11 @@ public class TileCursor extends Cursor<Tile> {
         try {
             if (next != null && next.booleanValue()) {
                 Tile t = new Tile();
-                t.setZ(cursor.getInt(0));
-                t.setX(cursor.getInt(1));
-                t.setY(cursor.getInt(2));
-                t.setData(cursor.getBlob(3));
-                t.setMimeType(tileset.getTileFormat());
+                t.z(cursor.getInt(0));
+                t.x(cursor.getInt(1));
+                t.y(cursor.getInt(2));
+                t.data(cursor.getBlob(3));
+                t.mimeType(tileset.getTileFormat());
 
                 return t;
             }

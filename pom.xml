@@ -63,6 +63,6 @@
 
   <properties>
     <android.version>4.1.1.4</android.version>
-    <googleplay.version>r7</googleplay.version>
+    <googleplay.version>r22</googleplay.version>
   </properties>
 </project>
