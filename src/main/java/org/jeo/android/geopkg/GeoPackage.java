@@ -16,6 +16,7 @@ package org.jeo.android.geopkg;
 
 import java.io.IOException;
 
+import org.jeo.android.SQLiteBackend;
 import org.jeo.geopkg.Backend;
 import org.jeo.geopkg.GeoPkgBaseDriver;
 import org.jeo.geopkg.GeoPkgOpts;
@@ -29,7 +30,7 @@ public class GeoPackage extends GeoPkgBaseDriver {
 
     @Override
     protected Backend backend(GeoPkgOpts gpkgOpts) throws IOException {
-        return new SQLiteBackend(gpkgOpts);
+        return new SQLiteBackend(gpkgOpts.getFile());
     }
 
 }

@@ -1,8 +1,10 @@
-package org.jeo.android.geopkg;
+package org.jeo.android;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.vividsolutions.jts.geom.Geometry;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,27 +24,27 @@ public class SQLiteBackend extends Backend {
     
     final SQLiteDatabase db;
 
-    SQLiteBackend(GeoPkgOpts opts) {
-        this.db = SQLiteDatabase.openOrCreateDatabase(opts.getFile(), null);
+    public SQLiteBackend(File file) {
+        this.db = SQLiteDatabase.openOrCreateDatabase(file, null);
     }
 
     @Override
-    protected boolean canRunScripts() {
+    public boolean canRunScripts() {
         return false;
     }
     
     @Override
-    protected Session session() throws IOException {
+    public Session session() throws IOException {
         return new SQLiteSession();
     }
 
-    static String parsePrimaryKeyColumn(String tableDef) {
+    public static String parsePrimaryKeyColumn(String tableDef) {
         Matcher matcher = Pattern.compile("\"([^\"]+)\" INTEGER.*PRIMARY KEY").matcher(tableDef);
         return matcher.find() ? matcher.group(1) : null;
     }
 
     @Override
-    protected List<Pair<String, Class>> getColumnInfo(String table) throws IOException {
+    public List<Pair<String, Class>> getColumnInfo(String table) throws IOException {
         List<Pair<String, Class>> info = new ArrayList<Pair<String,Class>>();
         String sql = String.format("PRAGMA table_info(%s)", table);
         Cursor cursor = db.rawQuery(sql, null);
@@ -77,17 +79,17 @@ public class SQLiteBackend extends Backend {
         Cursor cursor;
 
         @Override
-        protected void addBatch(String sql) throws IOException {
+        public void addBatch(String sql) throws IOException {
             db.execSQL(sql);
         }
 
         @Override
-        protected void executeBatch() throws IOException {
+        public void executeBatch() throws IOException {
             // do nothing
         }
 
         @Override
-        protected void executePrepared(String sql, Object... args) throws IOException {
+        public void executePrepared(String sql, Object... args) throws IOException {
             GeoPkgGeomWriter writer = new GeoPkgGeomWriter();
             for (int i = 0; i < args.length; i++) {
                 if (args[i] instanceof Geometry) {
@@ -99,12 +101,12 @@ public class SQLiteBackend extends Backend {
         }
 
         @Override
-        protected void execute(String sql) throws IOException {
+        public void execute(String sql) throws IOException {
             executePrepared(sql);
         }
 
         @Override
-        protected SQLiteResults queryPrepared(String sql, Object... args) throws IOException {
+        public SQLiteResults queryPrepared(String sql, Object... args) throws IOException {
             String[] selectionArgs = new String[args.length];
             for (int i = 0; i < args.length; i++) {
                 selectionArgs[i] = String.valueOf(args[i]);
@@ -114,12 +116,12 @@ public class SQLiteBackend extends Backend {
         }
 
         @Override
-        protected Results query(String sql) throws IOException {
+        public Results query(String sql) throws IOException {
             return queryPrepared(sql);
         }
 
         @Override
-        protected void endTransaction(boolean complete) throws IOException {
+        public void endTransaction(boolean complete) throws IOException {
             if (complete) {
                 db.setTransactionSuccessful();
             }
@@ -127,12 +129,12 @@ public class SQLiteBackend extends Backend {
         }
 
         @Override
-        protected void beginTransaction() throws IOException {
+        public void beginTransaction() throws IOException {
             db.beginTransaction();
         }
 
         @Override
-        protected List<String> getPrimaryKeys(String tableName) throws IOException {
+        public List<String> getPrimaryKeys(String tableName) throws IOException {
             List<String> keys = new ArrayList<String>(3);
             String sql = "SELECT sql from sqlite_master where type=? and name=?";
             SQLiteResults rs = queryPrepared(sql, "table", tableName);
@@ -161,12 +163,12 @@ public class SQLiteBackend extends Backend {
         }
 
         @Override
-        protected boolean next() throws IOException {
+        public boolean next() throws IOException {
             return cursor.moveToNext();
         }
 
         @Override
-        protected Object getObject(int idx, Class t) throws IOException {
+        public Object getObject(int idx, Class t) throws IOException {
             Object obj;
             if (Geometry.class.isAssignableFrom(t)) {
                 obj = geomReader.read(cursor.getBlob(idx));
@@ -184,43 +186,43 @@ public class SQLiteBackend extends Backend {
         }
 
         @Override
-        protected long getLong(int idx) throws IOException {
+        public long getLong(int idx) throws IOException {
             return cursor.getLong(idx);
         }
 
         @Override
-        protected String getString(String col) throws IOException {
+        public String getString(String col) throws IOException {
             return cursor.getString(cursor.getColumnIndex(col));
         }
 
         @Override
-        protected byte[] getBytes(int i) throws IOException {
+        public byte[] getBytes(int i) throws IOException {
             return cursor.getBlob(i);
         }
 
 
         @Override
-        protected String getString(int idx) throws IOException {
+        public String getString(int idx) throws IOException {
             return cursor.getString(idx);
         }
 
         @Override
-        protected int getInt(int idx) throws IOException {
+        public int getInt(int idx) throws IOException {
             return cursor.getInt(idx);
         }
 
         @Override
-        protected double getDouble(int idx) throws IOException {
+        public double getDouble(int idx) throws IOException {
             return cursor.getDouble(idx);
         }
 
         @Override
-        protected boolean getBoolean(int idx) throws IOException {
+        public boolean getBoolean(int idx) throws IOException {
             return cursor.getInt(idx) != 0;
         }
 
         @Override
-        protected void closeInternal() throws Exception {
+        public void closeInternal() throws Exception {
             cursor.close();
         }
     }
