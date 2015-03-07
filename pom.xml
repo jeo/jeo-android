@@ -33,6 +33,16 @@
     </dependency>
     <dependency>
       <groupId>org.jeo</groupId>
+      <artifactId>jeo-mbtiles</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jeo</groupId>
+      <artifactId>jeo-render</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jeo</groupId>
       <artifactId>jeo-carto</artifactId>
       <version>${project.version}</version>
     </dependency>

@@ -20,7 +20,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.jeo.android.SQLiteBackend;
+import org.jeo.mbtiles.MBTileSet;
 import org.jeo.data.FileDriver;
+import org.jeo.mbtiles.MBTilesOpts;
 
 /**
  * Driver for the MBTiles format, that utilizes Android SQLite capabilities.
@@ -30,7 +33,7 @@ import org.jeo.data.FileDriver;
 public class MBTiles extends FileDriver<MBTileSet> {
 
     public static MBTileSet open(File file){
-        return new MBTileSet(file);
+        return new MBTileSet(new SQLiteBackend(file), new MBTilesOpts(file));
     }
 
     @Override
@@ -50,6 +53,6 @@ public class MBTiles extends FileDriver<MBTileSet> {
 
     @Override
     public MBTileSet open(File file, Map<?, Object> opts) throws IOException {
-        return new MBTileSet(file);
+        return new MBTileSet(new SQLiteBackend(file), new MBTilesOpts(file));
     }
 }

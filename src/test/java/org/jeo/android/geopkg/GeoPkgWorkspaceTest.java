@@ -14,6 +14,7 @@
  */
 package org.jeo.android.geopkg;
 
+import org.jeo.android.SQLiteBackend;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
