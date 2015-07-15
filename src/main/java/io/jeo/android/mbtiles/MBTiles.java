@@ -17,8 +17,10 @@ package io.jeo.android.mbtiles;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import io.jeo.android.SQLiteBackend;
 import io.jeo.mbtiles.MBTileSet;
@@ -54,5 +56,10 @@ public class MBTiles extends FileDriver<MBTileSet> {
     @Override
     public MBTileSet open(File file, Map<?, Object> opts) throws IOException {
         return new MBTileSet(new SQLiteBackend(file), new MBTilesOpts(file));
+    }
+
+    @Override
+    public Set<Capability> capabilities() {
+        return Collections.emptySet();
     }
 }
