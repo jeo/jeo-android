@@ -12,10 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jeo.android.graphics;
+package io.jeo.android.graphics;
 
-import org.jeo.map.Map;
-import org.jeo.map.View;
+import io.jeo.map.Map;
+import io.jeo.map.View;
 import org.osgeo.proj4j.CoordinateReferenceSystem;
 
 import android.graphics.Canvas;

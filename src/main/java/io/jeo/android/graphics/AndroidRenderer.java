@@ -12,32 +12,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jeo.android.graphics;
+package io.jeo.android.graphics;
 
 import android.graphics.*;
 import android.graphics.Rect;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
-import org.jeo.tile.TileDataset;
-import org.jeo.vector.Feature;
-import org.jeo.geom.CoordinatePath;
-import org.jeo.map.*;
-import org.jeo.render.BaseRenderer;
-import org.jeo.render.Label;
-import org.jeo.tile.Tile;
-import org.jeo.tile.TileCover;
-import org.jeo.tile.TilePyramid;
-import org.jeo.util.*;
+import io.jeo.tile.TileDataset;
+import io.jeo.vector.Feature;
+import io.jeo.geom.CoordinatePath;
+import io.jeo.map.*;
+import io.jeo.render.BaseRenderer;
+import io.jeo.render.Label;
+import io.jeo.tile.Tile;
+import io.jeo.tile.TileCover;
+import io.jeo.tile.TilePyramid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
-import static org.jeo.android.graphics.Graphics.*;
-import static org.jeo.map.CartoCSS.*;
+import static io.jeo.android.graphics.Graphics.*;
+import static io.jeo.map.CartoCSS.*;
 
 /**
  * Renders a map to an Android {@link Canvas}.
@@ -107,7 +105,7 @@ public class AndroidRenderer extends BaseRenderer {
     }
 
     @Override
-    protected org.jeo.render.Labeller createLabeller() {
+    protected io.jeo.render.Labeller createLabeller() {
         return new Labeller(canvas, tx);
     }
 
@@ -301,7 +299,7 @@ public class AndroidRenderer extends BaseRenderer {
     }
 
     @Override
-    protected void drawRasterRGBA(ByteBuffer raster, org.jeo.util.Rect pos, Rule rule) throws IOException {
+    protected void drawRasterRGBA(ByteBuffer raster, io.jeo.util.Rect pos, Rule rule) throws IOException {
         tx.reset(canvas);
         try {
             Bitmap bitmap = Bitmap.createBitmap(pos.width(), pos.height(), Bitmap.Config.ARGB_8888);
@@ -314,7 +312,7 @@ public class AndroidRenderer extends BaseRenderer {
     }
 
     @Override
-    protected void drawRasterGray(ByteBuffer raster, org.jeo.util.Rect pos, Rule rule) throws IOException {
+    protected void drawRasterGray(ByteBuffer raster, io.jeo.util.Rect pos, Rule rule) throws IOException {
         tx.reset(canvas);
         try {
             Bitmap bitmap = Bitmap.createBitmap(pos.width(), pos.height(), Bitmap.Config.ALPHA_8);
@@ -326,7 +324,7 @@ public class AndroidRenderer extends BaseRenderer {
         }
     }
 
-    Rect rect(org.jeo.util.Rect r) {
+    Rect rect(io.jeo.util.Rect r) {
         return new Rect(r.left, r.top, r.right, r.bottom);
     }
 

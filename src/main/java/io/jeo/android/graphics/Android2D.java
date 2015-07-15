@@ -1,4 +1,4 @@
-package org.jeo.android.graphics;
+package io.jeo.android.graphics;
 
 /* Copyright 2014 The jeo project. All rights reserved.
  *
@@ -16,8 +16,8 @@ package org.jeo.android.graphics;
  */
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import org.jeo.map.View;
-import org.jeo.render.RendererFactory;
+import io.jeo.map.View;
+import io.jeo.render.RendererFactory;
 
 import java.util.Arrays;
 import java.util.List;

@@ -12,17 +12,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jeo.android.graphics;
+package io.jeo.android.graphics;
 
 import java.util.List;
 
-import org.jeo.vector.Feature;
-import org.jeo.map.Rule;
+import io.jeo.vector.Feature;
+import io.jeo.map.Rule;
 
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineSegment;
-import org.jeo.render.Label;
+import io.jeo.render.Label;
 
 /**
  * Label for lines or labels anchored to a line.

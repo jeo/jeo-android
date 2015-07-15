@@ -22,32 +22,32 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.jeo</groupId>
+      <groupId>io.jeo</groupId>
       <artifactId>jeo</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.jeo</groupId>
+      <groupId>io.jeo</groupId>
       <artifactId>jeo-sql</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.jeo</groupId>
+      <groupId>io.jeo</groupId>
       <artifactId>jeo-mbtiles</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.jeo</groupId>
+      <groupId>io.jeo</groupId>
       <artifactId>jeo-render</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.jeo</groupId>
+      <groupId>io.jeo</groupId>
       <artifactId>jeo-carto</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.jeo</groupId>
+      <groupId>io.jeo</groupId>
       <artifactId>jeo-geopkg</artifactId>
       <version>${project.version}</version>
       <exclusions>

@@ -12,44 +12,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jeo.android.graphics;
+package io.jeo.android.graphics;
 
-import static org.jeo.android.graphics.Graphics.cap;
-import static org.jeo.android.graphics.Graphics.color;
-import static org.jeo.android.graphics.Graphics.dash;
-import static org.jeo.android.graphics.Graphics.join;
-import static org.jeo.android.graphics.Graphics.paint;
-import static org.jeo.android.graphics.Graphics.pdMode;
-import static org.jeo.android.graphics.Graphics.strokeWidth;
-import static org.jeo.map.CartoCSS.COMP_OP;
-import static org.jeo.map.CartoCSS.LINE_CAP;
-import static org.jeo.map.CartoCSS.LINE_COLOR;
-import static org.jeo.map.CartoCSS.LINE_COMP_OP;
-import static org.jeo.map.CartoCSS.LINE_DASHARRAY;
-import static org.jeo.map.CartoCSS.LINE_DASH_OFFSET;
-import static org.jeo.map.CartoCSS.LINE_JOIN;
-import static org.jeo.map.CartoCSS.LINE_OPACITY;
-import static org.jeo.map.CartoCSS.LINE_WIDTH;
-import static org.jeo.map.CartoCSS.MARKER_COMP_OP;
-import static org.jeo.map.CartoCSS.MARKER_FILL;
-import static org.jeo.map.CartoCSS.MARKER_FILL_OPACITY;
-import static org.jeo.map.CartoCSS.MARKER_LINE_COLOR;
-import static org.jeo.map.CartoCSS.MARKER_LINE_OPACITY;
-import static org.jeo.map.CartoCSS.MARKER_LINE_WIDTH;
-import static org.jeo.map.CartoCSS.POLYGON_COMP_OP;
-import static org.jeo.map.CartoCSS.POLYGON_FILL;
-import static org.jeo.map.CartoCSS.POLYGON_OPACITY;
-import static org.jeo.map.CartoCSS.TEXT_ALIGN;
-import static org.jeo.map.CartoCSS.TEXT_FILL;
-import static org.jeo.map.CartoCSS.TEXT_HALO_FILL;
-import static org.jeo.map.CartoCSS.TEXT_HALO_RADIUS;
-import static org.jeo.map.CartoCSS.TEXT_SIZE;
+import static io.jeo.map.CartoCSS.COMP_OP;
+import static io.jeo.map.CartoCSS.LINE_CAP;
+import static io.jeo.map.CartoCSS.LINE_COLOR;
+import static io.jeo.map.CartoCSS.LINE_COMP_OP;
+import static io.jeo.map.CartoCSS.LINE_DASHARRAY;
+import static io.jeo.map.CartoCSS.LINE_DASH_OFFSET;
+import static io.jeo.map.CartoCSS.LINE_JOIN;
+import static io.jeo.map.CartoCSS.LINE_OPACITY;
+import static io.jeo.map.CartoCSS.LINE_WIDTH;
+import static io.jeo.map.CartoCSS.MARKER_COMP_OP;
+import static io.jeo.map.CartoCSS.MARKER_FILL;
+import static io.jeo.map.CartoCSS.MARKER_FILL_OPACITY;
+import static io.jeo.map.CartoCSS.MARKER_LINE_COLOR;
+import static io.jeo.map.CartoCSS.MARKER_LINE_OPACITY;
+import static io.jeo.map.CartoCSS.MARKER_LINE_WIDTH;
+import static io.jeo.map.CartoCSS.POLYGON_COMP_OP;
+import static io.jeo.map.CartoCSS.POLYGON_FILL;
+import static io.jeo.map.CartoCSS.POLYGON_OPACITY;
+import static io.jeo.map.CartoCSS.TEXT_ALIGN;
+import static io.jeo.map.CartoCSS.TEXT_FILL;
+import static io.jeo.map.CartoCSS.TEXT_HALO_FILL;
+import static io.jeo.map.CartoCSS.TEXT_HALO_RADIUS;
+import static io.jeo.map.CartoCSS.TEXT_SIZE;
 
-import org.jeo.tile.Tile;
-import org.jeo.vector.Feature;
-import org.jeo.geom.CoordinatePath;
-import org.jeo.map.RGB;
-import org.jeo.map.Rule;
+import io.jeo.tile.Tile;
+import io.jeo.vector.Feature;
+import io.jeo.geom.CoordinatePath;
+import io.jeo.map.RGB;
+import io.jeo.map.Rule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

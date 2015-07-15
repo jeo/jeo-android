@@ -12,14 +12,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jeo.android.geopkg;
+package io.jeo.android.geopkg;
 
 import java.io.IOException;
 
-import org.jeo.android.SQLiteBackend;
-import org.jeo.geopkg.Backend;
-import org.jeo.geopkg.GeoPkgBaseDriver;
-import org.jeo.geopkg.GeoPkgOpts;
+import io.jeo.android.SQLiteBackend;
+import io.jeo.geopkg.Backend;
+import io.jeo.geopkg.GeoPkgBaseDriver;
+import io.jeo.geopkg.GeoPkgOpts;
 
 /**
  * Driver for the GeoPackage format, that utilizes Android SQLite capabilities. 

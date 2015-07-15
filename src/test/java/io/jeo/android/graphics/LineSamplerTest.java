@@ -12,12 +12,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jeo.android.graphics;
+package io.jeo.android.graphics;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import org.jeo.geom.Geom;
+import io.jeo.geom.Geom;
 import org.junit.Test;
 
 import com.vividsolutions.jts.geom.Coordinate;

@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jeo.android.mbtiles;
+package io.jeo.android.mbtiles;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,10 +20,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import org.jeo.android.SQLiteBackend;
-import org.jeo.mbtiles.MBTileSet;
-import org.jeo.data.FileDriver;
-import org.jeo.mbtiles.MBTilesOpts;
+import io.jeo.android.SQLiteBackend;
+import io.jeo.mbtiles.MBTileSet;
+import io.jeo.data.FileDriver;
+import io.jeo.mbtiles.MBTilesOpts;
 
 /**
  * Driver for the MBTiles format, that utilizes Android SQLite capabilities.

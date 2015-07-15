@@ -12,27 +12,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jeo.android.graphics;
+package io.jeo.android.graphics;
 
-import static org.jeo.android.graphics.Graphics.envelope;
-import static org.jeo.android.graphics.Graphics.expand;
-import static org.jeo.android.graphics.Graphics.point;
-import static org.jeo.android.graphics.Graphics.rectFromBottomCenter;
-import static org.jeo.android.graphics.Graphics.rectFromBottomLeft;
-import static org.jeo.android.graphics.Graphics.rectFromBottomRight;
-import static org.jeo.map.CartoCSS.TEXT_DX;
-import static org.jeo.map.CartoCSS.TEXT_DY;
-import static org.jeo.map.CartoCSS.TEXT_MAX_CHAR_ANGLE_DELTA;
-import static org.jeo.map.CartoCSS.TEXT_MIN_PADDING;
+import static io.jeo.android.graphics.Graphics.envelope;
+import static io.jeo.android.graphics.Graphics.expand;
+import static io.jeo.android.graphics.Graphics.point;
+import static io.jeo.android.graphics.Graphics.rectFromBottomCenter;
+import static io.jeo.android.graphics.Graphics.rectFromBottomLeft;
+import static io.jeo.android.graphics.Graphics.rectFromBottomRight;
+import static io.jeo.map.CartoCSS.TEXT_DX;
+import static io.jeo.map.CartoCSS.TEXT_DY;
+import static io.jeo.map.CartoCSS.TEXT_MAX_CHAR_ANGLE_DELTA;
+import static io.jeo.map.CartoCSS.TEXT_MIN_PADDING;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.jeo.vector.Feature;
-import org.jeo.geom.GeomBuilder;
-import org.jeo.map.Rule;
+import io.jeo.vector.Feature;
+import io.jeo.geom.GeomBuilder;
+import io.jeo.map.Rule;
 
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -47,10 +47,10 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineSegment;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.MultiLineString;
-import org.jeo.render.Label;
-import org.jeo.render.LabelIndex;
+import io.jeo.render.Label;
+import io.jeo.render.LabelIndex;
 
-public class Labeller implements org.jeo.render.Labeller {
+public class Labeller implements io.jeo.render.Labeller {
 
     static final double DEFAULT_MAX_ANGLE_CHAR_DELTA = 22.5 * Math.PI/180.0;
     static final double HALFPI = Math.PI/2.0;

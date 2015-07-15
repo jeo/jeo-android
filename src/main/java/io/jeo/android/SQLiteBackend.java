@@ -1,4 +1,4 @@
-package org.jeo.android;
+package io.jeo.android;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -10,11 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.jeo.geopkg.Backend;
-import org.jeo.geopkg.GeoPkgOpts;
-import org.jeo.geopkg.geom.GeoPkgGeomReader;
-import org.jeo.geopkg.geom.GeoPkgGeomWriter;
-import org.jeo.util.Pair;
+import io.jeo.geopkg.Backend;
+import io.jeo.geopkg.geom.GeoPkgGeomReader;
+import io.jeo.geopkg.geom.GeoPkgGeomWriter;
+import io.jeo.util.Pair;
 
 /**
  *

@@ -12,12 +12,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jeo.android.gmaps;
+package io.jeo.android.gmaps;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jeo.geom.Geom;
+import io.jeo.geom.Geom;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;

@@ -12,12 +12,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jeo.android.gmaps;
+package io.jeo.android.gmaps;
 
 import static org.junit.Assert.*;
 
-import org.jeo.android.gmaps.GeometryAdapter;
-import org.jeo.geom.Geom;
+import io.jeo.android.gmaps.GeometryAdapter;
+import io.jeo.geom.Geom;
 import org.junit.Before;
 import org.junit.Test;
 

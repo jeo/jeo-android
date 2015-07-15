@@ -12,9 +12,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jeo.android.geopkg;
+package io.jeo.android.geopkg;
 
-import org.jeo.android.SQLiteBackend;
+import io.jeo.android.SQLiteBackend;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
