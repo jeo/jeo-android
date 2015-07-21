@@ -14,6 +14,7 @@
  */
 package io.jeo.android.graphics;
 
+import io.jeo.geom.Bounds;
 import io.jeo.map.Map;
 import io.jeo.map.View;
 import org.osgeo.proj4j.CoordinateReferenceSystem;
@@ -23,7 +24,6 @@ import android.graphics.Matrix;
 import android.graphics.PointF;
 
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Envelope;
 
 /**
  * Abstracts the affine transformations involved in the rendering pipeline. 
@@ -133,7 +133,7 @@ public class TransformPipeline implements View.Listener {
 //    }
 
     @Override
-    public void onBoundsChanged(View view, Envelope bounds, Envelope old) {
+    public void onBoundsChanged(View view, Bounds bounds, Bounds old) {
         update(view);
     }
 
