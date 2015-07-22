@@ -16,6 +16,7 @@ package io.jeo.android.mbtiles;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -34,7 +35,8 @@ import io.jeo.mbtiles.MBTilesOpts;
  */
 public class MBTiles extends FileDriver<MBTileSet> {
 
-    public static MBTileSet open(File file){
+    public static MBTileSet open(Path path){
+        File file = path.toFile();
         return new MBTileSet(new SQLiteBackend(file), new MBTilesOpts(file));
     }
 
